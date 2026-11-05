@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Core Scanner Application (FastAPI + Docling + Instructor + Folder Watcher)
+  scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart_invoice_scanner
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/invoices-ingest
+    volumes:
+      # Mount storage folders to host for easy dropping of files and output retrieval
+      - ./storage/consume:/app/storage/consume
+      - ./storage/archive:/app/storage/archive
+      - ./storage/error:/app/storage/error
+      - ./storage/output:/app/storage/output
+      - ./storage/logs:/app/storage/logs
+      - docling_cache:/app/storage/.cache/docling
+    networks:
+      - scanner_network
+    depends_on:
+      - n8n
+
+  # n8n Automation Engine
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: smart_scanner_n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Asia/Tehran
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./storage/output:/data/output:ro
+    networks:
+      - scanner_network
+
+volumes:
+  docling_cache:
+  n8n_data:
+
+networks:
+  scanner_network:
+    driver: bridge

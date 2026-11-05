@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Storage Files (keep directory structure via .gitkeep, ignore actual documents)
+storage/consume/*
+!storage/consume/.gitkeep
+storage/archive/*
+!storage/archive/.gitkeep
+storage/error/*
+!storage/error/.gitkeep
+storage/output/*
+!storage/output/.gitkeep
+storage/logs/*
+!storage/logs/.gitkeep
+storage/.cache/
+
+# Operating System Files
+.DS_Store
+Thumbs.db

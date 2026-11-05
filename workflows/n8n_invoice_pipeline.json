@@ -1,0 +1,147 @@
+{
+  "name": "Smart Invoice & Receipt Automation Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoices-ingest",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "webhook-trigger",
+      "name": "Webhook Ingest"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.body.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "check-success",
+      "name": "Is Status Success?"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID_HERE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Invoices",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.toISO() }}",
+            "File Name": "={{ $json.body.source_filename }}",
+            "Invoice Number": "={{ $json.body.document.document_number }}",
+            "Document Type": "={{ $json.body.document.document_type }}",
+            "Vendor": "={{ $json.body.document.vendor.name }}",
+            "Vendor Tax ID": "={{ $json.body.document.vendor.tax_id }}",
+            "Customer": "={{ $json.body.document.customer.name }}",
+            "Issue Date": "={{ $json.body.document.issue_date }}",
+            "Currency": "={{ $json.body.document.currency }}",
+            "Subtotal": "={{ $json.body.document.summary.subtotal }}",
+            "Tax": "={{ $json.body.document.summary.total_tax }}",
+            "Discount": "={{ $json.body.document.summary.total_discount }}",
+            "Grand Total": "={{ $json.body.document.summary.grand_total }}",
+            "Items Count": "={{ $json.body.document.items.length }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        500,
+        -100
+      ],
+      "id": "append-google-sheets",
+      "name": "Save to Google Sheets"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=🧾 *فاکتور مالی جدید با موفقیت استخراج و ثبت شد*\n\n📄 *شماره فاکتور:* `{{ $json.body.document.document_number || 'نامشخص' }}`\n🏢 *فروشنده:* {{ $json.body.document.vendor.name || 'نامشخص' }}\n👤 *خریدار:* {{ $json.body.document.customer.name || 'نامشخص' }}\n💰 *مبلغ کل:* `{{ $json.body.document.summary.grand_total }}` {{ $json.body.document.currency }}\n📦 *تعداد اقلام:* {{ $json.body.document.items.length }}\n📅 *تاریخ صدور:* {{ $json.body.document.issue_date || 'نامشخص' }}\n\n⚙️ *موتور پردازش:* IBM Docling + Instructor",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        100
+      ],
+      "id": "telegram-alert",
+      "name": "Send Telegram Alert"
+    }
+  ],
+  "connections": {
+    "Webhook Ingest": {
+      "main": [
+        [
+          {
+            "node": "Is Status Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Status Success?": {
+      "main": [
+        [
+          {
+            "node": "Save to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

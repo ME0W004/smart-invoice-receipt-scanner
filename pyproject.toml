@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smart-invoice-scanner"
+version = "1.0.0"
+description = "Industrial-grade Smart Invoice & Receipt Scanner using IBM Docling, Instructor, and Paperless-ngx patterns."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Smart Invoice Scanner Team" }
+]
+dependencies = [
+    "docling>=2.5.0",
+    "instructor>=1.4.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.2.0",
+    "openai>=1.30.0",
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-multipart>=0.0.9",
+    "openpyxl>=3.1.2",
+    "pandas>=2.2.0",
+    "httpx>=0.27.0",
+    "watchdog>=4.0.0",
+    "typer>=0.12.0",
+    "python-dotenv>=1.0.1",
+    "loguru>=0.7.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+]
+
+[project.scripts]
+invoice-scanner = "main:app"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["."]
