@@ -96,7 +96,7 @@
     {
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=🧾 *فاکتور مالی جدید با موفقیت استخراج و ثبت شد*\n\n📄 *شماره فاکتور:* `{{ $json.body.document.document_number || 'نامشخص' }}`\n🏢 *فروشنده:* {{ $json.body.document.vendor.name || 'نامشخص' }}\n👤 *خریدار:* {{ $json.body.document.customer.name || 'نامشخص' }}\n💰 *مبلغ کل:* `{{ $json.body.document.summary.grand_total }}` {{ $json.body.document.currency }}\n📦 *تعداد اقلام:* {{ $json.body.document.items.length }}\n📅 *تاریخ صدور:* {{ $json.body.document.issue_date || 'نامشخص' }}\n\n⚙️ *موتور پردازش:* IBM Docling + Instructor",
+        "text": "=🧾 *New Financial Document Processed & Verified*\n\n📄 *Invoice / Ref No:* `{{ $json.body.document.document_number || 'N/A' }}`\n🏢 *Vendor:* {{ $json.body.document.vendor.name || 'N/A' }}\n👤 *Customer:* {{ $json.body.document.customer.name || 'N/A' }}\n💰 *Grand Total:* `{{ $json.body.document.summary.grand_total }}` {{ $json.body.document.currency }}\n📦 *Items Count:* {{ $json.body.document.items.length }}\n📅 *Issue Date:* {{ $json.body.document.issue_date || 'N/A' }}\n\n⚙️ *Engine:* IBM Docling + Instructor (Pydantic V2)",
         "additionalFields": {
           "parse_mode": "Markdown"
         }

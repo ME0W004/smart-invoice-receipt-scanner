@@ -18,12 +18,16 @@
 
 ## 📌 1. Overview & Core Philosophy
 
-**Smart Invoice & Receipt Scanner** is an enterprise-grade ingestion and extraction pipeline. Instead of reinventing custom OCR or brittle regex parsers, it unifies battle-tested, high-reliability open-source frameworks:
+**Smart Invoice & Receipt Scanner** is an enterprise-grade ingestion and extraction pipeline designed for multinational businesses, accounting firms, and trading corporations. Instead of relying on brittle regex patterns or legacy OCR heuristics, it unites modern, battle-tested open-source architectures:
 
-* **[IBM Docling](https://github.com/DS4SD/docling):** Extracts multi-column financial documents and complex tabular layouts into clean, structural Markdown with zero column drift.
+* **[IBM Docling](https://github.com/DS4SD/docling):** Extracts complex multi-column financial documents, line items, and nested tables into clean structural Markdown with zero column drift.
 * **[Instructor](https://github.com/jxnl/instructor) & Pydantic V2:** Enforces 100% strict mathematical and schema validation over LLM outputs, featuring an automated feedback retry loop (`max_retries=3`) to self-correct calculation discrepancies.
+* **Global International Enterprise Readiness:** Out-of-the-box support for ISO 4217 currencies (USD, EUR, GBP, CAD, AUD, JPY, CHF, etc.), international tax structures (VAT, GST, Sales Tax, Harmonized Tax), standard corporate IDs (TIN, EIN, VAT, GSTIN, ABN), and ISO 8601 date normalization (`YYYY-MM-DD`).
 * **[Paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) Ingestion Architecture:** Reliable consumption directory monitoring (`consume/`, `archive/`, `error/`, `output/`) with debounce and file-lock protection.
 * **[n8n](https://n8n.io) Production Automations:** Out-of-the-box workflow template to automatically sync validated financial records directly to **Google Sheets**, enterprise **ERP databases**, and **Telegram/Slack alerts**.
+
+> [!NOTE]
+> **Regional Editions:** The localized Persian / Iranian baseline release is permanently tagged and archived on GitHub as [`v1.0.0-persian`](https://github.com/ME0W004/smart-invoice-receipt-scanner/tree/v1.0.0-persian) (branch: `release/persian-edition`). The `main` branch is the global English international edition.
 
 ---
 

@@ -15,7 +15,7 @@ class DocumentType(str, Enum):
 class PartyDetails(BaseModel):
     """Details of seller/vendor or buyer/customer."""
     name: Optional[str] = Field(None, description="Full legal or commercial company/person name")
-    tax_id: Optional[str] = Field(None, description="Tax Identification Number (TIN, Economic Code, VAT Number)")
+    tax_id: Optional[str] = Field(None, description="Tax Identification Number (VAT, TIN, EIN, GSTIN, ABN)")
     national_id: Optional[str] = Field(None, description="National ID or Company Registration Number")
     phone: Optional[str] = Field(None, description="Phone number with country or area code if available")
     email: Optional[str] = Field(None, description="Email address")
@@ -31,7 +31,7 @@ class InvoiceLineItem(BaseModel):
     sku: Optional[str] = Field(None, description="Product code, barcode, or SKU")
     description: str = Field(..., description="Description of the good or service")
     quantity: float = Field(default=1.0, description="Quantity or volume")
-    unit_of_measure: Optional[str] = Field(None, description="Unit e.g., pcs, kg, hours, عدد, کیلوگرم")
+    unit_of_measure: Optional[str] = Field(None, description="Unit of measurement e.g., pcs, units, items, kg, hours, box, month")
     unit_price: float = Field(default=0.0, description="Price per single unit before discount/tax")
     discount: float = Field(default=0.0, description="Discount amount applied to this line")
     tax_rate: Optional[float] = Field(None, description="VAT or Tax percentage (e.g., 9.0 or 10.0)")
@@ -103,7 +103,7 @@ class ExtractedDocument(BaseModel):
     )
     currency: str = Field(
         default="USD", 
-        description="Currency code or symbol (e.g. USD, EUR, IRR, IRT, AED, GBP)"
+        description="Standard ISO 4217 currency code (e.g. USD, EUR, GBP, CAD, AUD, JPY, CHF)"
     )
     
     vendor: PartyDetails = Field(
